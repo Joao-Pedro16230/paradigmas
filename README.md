@@ -3,12 +3,12 @@
 ## Clonar repositório
 
 ```bash
-git clone https://github.com/rafaelrotto/paradigmas-prog-20252.git
+git clone https://github.com/rafaelrotto/paradigmas-prog-20262.git
 ```
 
 ## Entrar na pasta do projeto
 ```bash
-cd /paradigmas-prog-20252
+cd /paradigmas-prog-20262
 ```
 
 ## Instalar dependências
@@ -29,7 +29,7 @@ cp .env.example .env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=paradigmas
+DB_DATABASE=paradigmas-prog
 DB_USERNAME=root
 DB_PASSWORD=
 ```
@@ -41,5 +41,5 @@ php artisan migrate
 
 ## Rodar aplicação
 ```bash
-php artisan serve --port=8007
+php artisan serve --port=8010
 ```
