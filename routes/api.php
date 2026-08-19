@@ -16,11 +16,46 @@ Route::post('/users', function() {
         'password' => ['required', 'min:4', 'max:20']
     ]);
 
-    User::create([
+    $user = User::create([
         'name' => $data['name'],
         'email' => $data['email'],
         'password' => $data['password']
     ]);
 
-    return response()->json('Usuário criado com sucesso!');
+    return response()->json([
+        'message' => 'Usuário criado com sucesso!',
+        'data' => $user
+    ]);
+});
+
+Route::get('/users', function() {
+    $users = User::all();
+
+    return response()->json(['data' => $users]);
+});
+
+Route::put('/users/{id}', function() {
+    $id = FacadesRequest::route('id');
+
+    $data = FacadesRequest::validate([
+        'name' => ['sometimes', 'string', 'max:100', 'min:3'],
+        'email' => ['sometimes', 'email'],
+        'password' => ['sometimes', 'min:4', 'max:20']
+    ]);
+
+    $user = User::find($id);
+
+    $user->update($data);
+
+    return response()->json(['data' => $user]);
+});
+
+Route::delete('/users/{id}', function() {
+    $id = FacadesRequest::route('id');
+
+    $user = User::find($id);
+
+    $user->delete();
+
+    return response('Usuário deletado com sucesso!');
 });
