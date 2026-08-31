@@ -4,36 +4,23 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateUserRequest;
+use App\Http\Services\UserService;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    public function __construct(public UserService $userService)
+    {}
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $data = $request->all();
-
-        /*
-        $users = User::query()
-        ->where(['name' => $data['name'], 'email' => $data['email']])
-        ->get();
-
-        */
-
-        $users = User::query()->where(function ($query) use($data) {
-            if (data_get($data, 'name')) {
-                $query->where('name', 'like', '%' . $data['name'] . '%');
-            }
-
-            if (data_get($data, 'email')) {
-                $query->where('email', 'like', '%' . $data['email'] . '%');
-            }
-        })->get();
-
-        return response()->json(['data' => $users]);
+        return response()->json([
+            'data' => $this->userService->index($request->all())
+        ]);
     }
 
     /**
@@ -41,17 +28,9 @@ class UserController extends Controller
      */
     public function store(CreateUserRequest $request)
     {
-        $data = $request->validated();
-
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => $data['password']
-        ]);
-
         return response()->json([
             'message' => 'Usuário criado com sucesso!',
-            'data' => $user
+            'data' => $this->userService->store($request->validated())
         ]);
     }
 
