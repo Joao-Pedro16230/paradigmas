@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateUserRequest;
+use App\Http\Resources\UserResource;
 use App\Http\Services\UserService;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -18,9 +19,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        return response()->json([
-            'data' => $this->userService->index($request->all())
-        ]);
+        return UserResource::collection($this->userService->index($request->all()));
     }
 
     /**
@@ -28,10 +27,7 @@ class UserController extends Controller
      */
     public function store(CreateUserRequest $request)
     {
-        return response()->json([
-            'message' => 'Usuário criado com sucesso!',
-            'data' => $this->userService->store($request->validated())
-        ]);
+        return new UserResource($this->userService->store($request->validated()));
     }
 
     /**
@@ -39,9 +35,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        $user = User::find($id);
-
-        return response()->json(['data' => $user]);
+        return new UserResource($this->userService->show($id));
     }
 
     /**
@@ -55,11 +49,7 @@ class UserController extends Controller
             'password' => ['sometimes', 'min:4', 'max:20']
         ]);
 
-        $user = User::find($id);
-
-        $user->update($data);
-
-        return response()->json(['data' => $user]);
+        return new UserResource($this->userService->update($data, $id));
     }
 
     /**
@@ -67,9 +57,7 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        $user = User::find($id);
-
-        $user->delete();
+        $this->destroy($id);
 
         return response('Usuário deletado com sucesso!');
     }
