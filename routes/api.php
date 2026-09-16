@@ -1,9 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\ClassroomController;
 use App\Http\Controllers\Api\UserController;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Request as FacadesRequest;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/health', function() {
@@ -20,3 +18,4 @@ Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
 // Equivale a isso
 Route::apiResource('/users', UserController::class);
+Route::apiResource('/classrooms', ClassroomController::class);

@@ -2,50 +2,35 @@
 
 namespace App\Http\Services;
 
-use App\Models\User;
+use App\Http\Repositories\UserRepository;
 
 class UserService
 {
+    public function __construct(private UserRepository $userRepository)
+    {}
+
     public function index(array $data)
     {
-        return User::query()->where(function ($query) use($data) {
-            if (data_get($data, 'name')) {
-                $query->where('name', 'like', '%' . $data['name'] . '%');
-            }
-
-            if (data_get($data, 'email')) {
-                $query->where('email', 'like', '%' . $data['email'] . '%');
-            }
-        })->get();
+        return $this->userRepository->index($data);
     }
 
     public function store(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => $data['password']
-        ]);
+        return $this->userRepository->store($data);
     }
 
     public function show(string $id)
     {
-        return User::findOrFail($id);
+        return $this->userRepository->show($id);
     }
 
     public function update(array $data, string $id)
     {
-        $user = $this->show($id);
-
-        $user->update($data);
-
-        return $user->fresh();
+        return $this->userRepository->update($data, $id);
     }
 
     public function destroy(string $id)
     {
-        $user = $this->show($id);
-
-        $user->delete();
+        $this->userRepository->destroy($id);
     }
 }
